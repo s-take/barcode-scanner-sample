@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import { Text, View, StyleSheet, Button } from "react-native";
 
 import { BarCodeScanner } from "expo-barcode-scanner";
@@ -11,7 +11,7 @@ export default function BarcodeScannerScreen() {
   useEffect(() => {
     (async () => {
       const { status } = await BarCodeScanner.requestPermissionsAsync();
-      setHasPermission(status === 'granted');
+      setHasPermission(status === "granted");
     })();
   }, []);
 
@@ -28,23 +28,34 @@ export default function BarcodeScannerScreen() {
   }
 
   return (
-    <View style={styles.container}>
+    <View style={styles.button}>
       <BarCodeScanner
         onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
         style={StyleSheet.absoluteFillObject}
       />
-      {scanned && <Button title={'タップして再スキャン'} onPress={() => setScanned(false)} />}
+      {scanned && (
+        <Button
+          title={"タップして再スキャン"}
+          onPress={() => setScanned(false)}
+        />
+      )}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      flexDirection: 'column',
-      justifyContent: 'center',
-    },
-  });
+  container: {
+    flex: 1,
+    flexDirection: "column",
+    justifyContent: "center",
+  },
+  button: {
+    flex: 1,
+    backgroundColor: "#fff",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+});
 
 // const BarcodeScannerScreen = ({ navigation }) => {
 //   return (

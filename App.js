@@ -7,19 +7,16 @@ import { createStackNavigator } from "@react-navigation/stack";
 import * as Font from "expo-font";
 import { Ionicons } from "@expo/vector-icons";
 import BarcodeScannerScreen from "./components/BarcodeScannerScreen";
+import CartItemList from "./components/CartItemList";
+import AddCart from "./components/AddCart";
+import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
 class HomeScreen extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <Text>BarCode Scanner Sample{"\n"}</Text>
-        <Button
-          style={{ alignSelf: "center" }}
-          onPress={() => this.props.navigation.navigate("バーコード読取")}
-          >
-          {/* <Icon type="FontAwesome5" name="barcode" /> */}
-          <Text>バーコード読取</Text>
-          </Button>
+        <Text>JANバーコード読取サンプル{"\n"}</Text>
         <StatusBar style="auto" />
       </View>
     );
@@ -33,46 +30,68 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
+  button: {
+    alignSelf: "center",
+    margin: 10,
+  },
 });
 
-class DetailsScreen extends React.Component {
-  render() {
-    return (
-      <View style={styles.container}>
-        <Text>バーコード読取</Text>
-      </View>
-    );
-  }
-}
-
-const Stack = createStackNavigator();
+const Tab = createMaterialBottomTabNavigator();
+//const Stack = createStackNavigator();
 function RootStack() {
   return (
-    <Stack.Navigator
-      initialRouteName="Home"
-      screenOptions={{ gestureEnabled: false }}
-    >
-      <Stack.Screen name="ホーム" component={HomeScreen} />
-      <Stack.Screen name="詳細" component={DetailsScreen} />
-      <Stack.Screen name="バーコード読取" component={BarcodeScannerScreen} />
-    </Stack.Navigator>
+    <Tab.Navigator initialRouteName="Home" activeColor="#fff">
+      <Tab.Screen
+        name="Home"
+        component={HomeScreen}
+        options={{
+          tabBarLabel: "ホーム",
+          tabBarIcon: ({ color }) => (
+            <MaterialCommunityIcons name="home" color={color} size={26} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="BarcodeScanner"
+        component={BarcodeScannerScreen}
+        options={{
+          tabBarLabel: "バーコード読取",
+          tabBarIcon: ({ color }) => (
+            <MaterialCommunityIcons name="barcode" color={color} size={26} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="AddCart"
+        component={AddCart}
+        options={{
+          tabBarLabel: "カートテスト",
+          tabBarIcon: ({ color }) => (
+            <MaterialCommunityIcons name="plus" color={color} size={26} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Cart"
+        component={CartItemList}
+        options={{
+          tabBarLabel: "カート",
+          tabBarIcon: ({ color }) => (
+            <MaterialCommunityIcons name="cart" color={color} size={26} />
+          ),
+          title: "カート",
+        }}
+      />
+    </Tab.Navigator>
   );
 }
-
-// export default function App() {
-//   return (
-//     <NavigationContainer>
-//       <RootStack />
-//     </NavigationContainer>
-//   );
-// }
 
 export default class App extends React.Component {
   // ロードが終わるまでは「loading...」を表示するため、state「isReady」で制御
   constructor(props) {
     super(props);
     this.state = {
-      isReady: false
+      isReady: false,
     };
   }
   // DidMountのタイミングでフォントリソースをメモリ上に読み込み。終わったらisReadyをオン。
@@ -80,7 +99,7 @@ export default class App extends React.Component {
     await Font.loadAsync({
       Roboto: require("native-base/Fonts/Roboto.ttf"),
       Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf"),
-      ...Ionicons.font
+      ...Ionicons.font,
     });
     this.setState({ isReady: true });
   }
@@ -95,9 +114,9 @@ export default class App extends React.Component {
     }
 
     return (
-        <NavigationContainer>
-          <RootStack />
-        </NavigationContainer>
+      <NavigationContainer>
+        <RootStack />
+      </NavigationContainer>
     );
   }
 }
